@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>BMQ | Acabamento</title>
+  <!-- Porta de entrada do app BMQ | Acabamento (bem-me-quer): só existe para o celular e o iPad guardarem o
+       ícone e o nome certos no atalho da tela de início. O app de verdade roda no Google,
+       dentro do quadro abaixo. Mesma receita do BMQ | Tecido e do splitLKS. -->
+  <link rel="apple-touch-icon" href="https://belovedmodas.github.io/acabamento/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://belovedmodas.github.io/acabamento/icone-180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="https://belovedmodas.github.io/acabamento/icone-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="https://belovedmodas.github.io/acabamento/icone-512.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="BMQ | Acabamento">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#cc9c9a">
+  <style>
+    /* A moldura não rola nem balança: quem rola é só o app, dentro do quadro. */
+    html, body { margin: 0; height: 100%; width: 100%; overflow: hidden; overscroll-behavior: none; background: #fbf6f5; }
+    iframe { border: 0; width: 100%; max-width: 100%; height: 100%; display: block; }
+  </style>
+</head>
+<body>
+  <script>
+    // iPhone e iPad. O iPad se apresenta como "Macintosh"; o que o entrega é a tela de toque.
+    var ua = navigator.userAgent;
+    var apple = /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
+    // O manifesto só entra fora do iPhone e do iPad: no iOS ele fazia o atalho vir com uma letra
+    // em vez do ícone; lá vale só a tag apple-touch-icon acima.
+    if (!apple) {
+      var m = document.createElement('link');
+      m.rel = 'manifest';
+      m.href = 'https://belovedmodas.github.io/acabamento/manifest.json';
+      document.head.appendChild(m);
+    }
+    var APP = 'https://script.google.com/macros/s/AKfycbwcCfaLdRSIBAP4sApfZvJQ_S4Xcm_blEZe2kgKKSb4m9hPtYEElypiiFvGsdZ8FADB4w/exec';
+    // ?teste=1 na porta vai junto para o app (modo teste: tudo na cópia da planilha).
+    var teste = /[?&]teste=1(&|$)/.test(location.search);
+    var f = document.createElement('iframe');
+    f.src = APP + (teste ? '?teste=1' : '');
+    f.title = 'BMQ | Acabamento';
+    document.body.appendChild(f);
+
+    // No iPhone e no iPad o Google mostra dentro do quadro um aviso no alto ("Este aplicativo foi criado por um
+    // usuário..."). Altura medida: 85px em tela estreita (320 a 480px, duas linhas) e 31px em tela larga
+    // (768px ou mais, uma linha). O quadro sobe essa altura para esconder o aviso.
+    // Só no iPhone e no iPad: lá o Safari não manda o login do Google para dentro do quadro, então o aviso
+    // aparece sempre. Em outros aparelhos, quem está logado na conta da empresa não vê o aviso, e subir o
+    // quadro cortaria o topo do app.
+    // Para acertar a altura sem publicar de novo: ?faixa=NN no endereço da porta.
+    function alturaDoAviso() {
+      var q = /[?&]faixa=(\d{1,3})(&|$)/.exec(location.search);
+      if (q) return Number(q[1]);
+      return window.innerWidth < 600 ? 85 : 31;
+    }
+    function esconderAviso() {
+      var a = alturaDoAviso();
+      f.style.marginTop = '-' + a + 'px';
+      f.style.height = 'calc(100% + ' + a + 'px)';
+    }
+    if (apple) {
+      esconderAviso();
+      window.addEventListener('resize', esconderAviso);
+    }
+  </script>
+</body>
+</html>
